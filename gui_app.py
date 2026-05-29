@@ -397,7 +397,7 @@ class App(ctk.CTk):
         self.label_dist_filter.pack(side="left", padx=(5, 5))
 
         self.dist_filter_buttons: Dict[str, ctk.CTkButton] = {}
-        filters = ["All", "Lv.5", "Lv.5/Lv.5", "Lv.5/Lv.6", "Lv.6/Lv.6"]
+        filters = ["All", "Any Lv.6", "2x Lv.6", "3x Lv.6", "4x Lv.6"]
         for f in filters:
             btn = ctk.CTkButton(
                 self.dist_filter_frame,
@@ -410,7 +410,7 @@ class App(ctk.CTk):
                 corner_radius=15
             )
             btn.pack(side="left", padx=2)
-        self.dist_filter_buttons[f] = btn
+            self.dist_filter_buttons[f] = btn
 
         # --- Console Panel ---
         self.console_frame = ctk.CTkFrame(self, width=400)
@@ -935,13 +935,13 @@ class App(ctk.CTk):
                         lv5_count += 1
                 
                 match = False
-                if self.distribution_filter == "Lv.5" and lv5_count >= 1 and lv6_count == 0:
+                if self.distribution_filter == "Any Lv.6" and lv6_count >= 1:
                     match = True
-                elif self.distribution_filter == "Lv.5/Lv.5" and lv5_count >= 2:
+                elif self.distribution_filter == "2x Lv.6" and lv6_count >= 2:
                     match = True
-                elif self.distribution_filter == "Lv.5/Lv.6" and lv5_count >= 1 and lv6_count >= 1:
+                elif self.distribution_filter == "3x Lv.6" and lv6_count >= 3:
                     match = True
-                elif self.distribution_filter == "Lv.6/Lv.6" and lv6_count >= 2:
+                elif self.distribution_filter == "4x Lv.6" and lv6_count >= 4:
                     match = True
                 
                 if match:

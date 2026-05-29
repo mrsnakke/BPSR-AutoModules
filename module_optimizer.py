@@ -26,6 +26,10 @@ ATTACK_ATTRIBUTES = {"Special Attack", "Elite Strike", "Strength Boost", "Agilit
 GUARDIAN_ATTRIBUTES = {"Resistance", "Armor"}
 SUPPORT_ATTRIBUTES = {"Healing Boost", "Healing Enhance"}
 
+MODULE_COMBINATION_SIZE = 5
+ENABLE_FITNESS_CACHE = True
+GLOBAL_FITNESS_CACHE: Dict[Tuple[int, ...], float] = {}
+
 # --- Solution Data Class (unchanged) ---
 @dataclass
 class ModuleSolution:
@@ -45,9 +49,16 @@ class ModuleSolution:
 # These functions are defined at the top level so they can be "pickled" by the multiprocessing module.
 
 def calculate_fitness(modules: List[ModuleInfo], category: ModuleCategory,
-                      prioritized_attrs: Optional[List[str]] = None) -> float:
+                      prioritized_attrs: Optional[List[str]] = None,
+                      cache: Optional[Dict[Tuple[int, ...], float]] = None) -> float:
     """Independent fitness calculation function."""
-    if not modules or len(set(m.uuid for m in modules)) < 4: return 0.0
+    if not modules or len(set(m.uuid for m in modules)) < MODULE_COMBINATION_SIZE: return 0.0
+    combo_key = tuple(sorted(m.uuid for m in modules))
+    if cache is None and ENABLE_FITNESS_CACHE:
+        cache = GLOBAL_FITNESS_CACHE
+    if cache is not None and combo_key in cache:
+        return cache[combo_key]
+
     attr_breakdown = {}
     for module in modules:
         for part in module.parts:
@@ -121,12 +132,13 @@ def run_single_ga_campaign(
     """
     执行一次完整的遗传算法流程。这是单个进程工作单元的目标函数。
     """
+    fitness_cache: Dict[Tuple[int, ...], float] = {} if ENABLE_FITNESS_CACHE else {}
     # 辅助函数嵌套在这里，不需要被序列化
     def _initialize_population(pool, size):
         population, seen = [], set()
-        if len(pool) < 4: return []
+        if len(pool) < MODULE_COMBINATION_SIZE: return []
         try:
-            max_possible_combinations = math.comb(len(pool), 4)
+            max_possible_combinations = math.comb(len(pool), MODULE_COMBINATION_SIZE)
         except AttributeError:
             def combinations(n, k):
                 if k < 0 or k > n: return 0
@@ -136,15 +148,16 @@ def run_single_ga_campaign(
                 for i in range(k):
                     res = res * (n - i) // (i + 1)
                 return res
-            max_possible_combinations = combinations(len(pool), 4)
+            max_possible_combinations = combinations(len(pool), MODULE_COMBINATION_SIZE)
         target_size = min(size, max_possible_combinations)
         if target_size == 0: return []
         while len(population) < target_size:
-            selected_modules = random.sample(pool, 4)
+            selected_modules = random.sample(pool, MODULE_COMBINATION_SIZE)
             solution = ModuleSolution(modules=selected_modules)
             combo_id = solution.get_combination_id()
             if combo_id not in seen:
-                solution.optimization_score = calculate_fitness(solution.modules, category, prioritized_attrs)
+                solution.optimization_score = calculate_fitness(solution.modules, category, prioritized_attrs,
+                                                               cache=fitness_cache if ENABLE_FITNESS_CACHE else None)
                 population.append(solution)
                 seen.add(combo_id)
         return population
@@ -155,10 +168,11 @@ def run_single_ga_campaign(
 
     def _crossover(p1, p2):
         if random.random() > ga_params['crossover_rate']: return deepcopy(p1), deepcopy(p2)
-        child1_mods = p1.modules[:2] + [m for m in p2.modules if m.uuid not in {mod.uuid for mod in p1.modules[:2]}][:2]
-        child2_mods = p2.modules[:2] + [m for m in p1.modules if m.uuid not in {mod.uuid for mod in p2.modules[:2]}][:2]
-        return (ModuleSolution(modules=child1_mods) if len(child1_mods) == 4 else deepcopy(p1),
-                ModuleSolution(modules=child2_mods) if len(child2_mods) == 4 else deepcopy(p2))
+        split = MODULE_COMBINATION_SIZE // 2 + MODULE_COMBINATION_SIZE % 2
+        child1_mods = p1.modules[:split] + [m for m in p2.modules if m.uuid not in {mod.uuid for mod in p1.modules[:split]}][:MODULE_COMBINATION_SIZE - split]
+        child2_mods = p2.modules[:split] + [m for m in p1.modules if m.uuid not in {mod.uuid for mod in p2.modules[:split]}][:MODULE_COMBINATION_SIZE - split]
+        return (ModuleSolution(modules=child1_mods) if len(child1_mods) == MODULE_COMBINATION_SIZE else deepcopy(p1),
+                ModuleSolution(modules=child2_mods) if len(child2_mods) == MODULE_COMBINATION_SIZE else deepcopy(p2))
 
     def _mutate(solution, pool):
         if random.random() > ga_params['mutation_rate']: return
@@ -177,10 +191,12 @@ def run_single_ga_campaign(
                 current_module = best_solution.modules[i]
                 best_replacement = None
                 best_new_score = best_solution.optimization_score
+                occupied_ids = {m.uuid for m in best_solution.modules if m.uuid != current_module.uuid}
                 for new_module in pool:
-                    if new_module.uuid in {m.uuid for m in best_solution.modules if m.uuid != current_module.uuid}: continue
+                    if new_module.uuid in occupied_ids: continue
                     temp_modules = best_solution.modules[:i] + [new_module] + best_solution.modules[i+1:]
-                    new_score = calculate_fitness(temp_modules, category, prioritized_attrs)
+                    new_score = calculate_fitness(temp_modules, category, prioritized_attrs,
+                                                  cache=fitness_cache if ENABLE_FITNESS_CACHE else None)
                     if new_score > best_new_score:
                         best_new_score = new_score
                         best_replacement = new_module
@@ -204,7 +220,8 @@ def run_single_ga_campaign(
             _mutate(c1, modules); _mutate(c2, modules)
             next_gen.extend([c1, c2])
         for individual in next_gen:
-            individual.optimization_score = calculate_fitness(individual.modules, category, prioritized_attrs)
+            individual.optimization_score = calculate_fitness(individual.modules, category, prioritized_attrs,
+                                                            cache=fitness_cache if ENABLE_FITNESS_CACHE else None)
         next_gen.sort(key=lambda s: s.optimization_score, reverse=True)
         local_search_count = int(ga_params['population_size'] * ga_params['local_search_rate'])
         for i in range(local_search_count):
@@ -389,15 +406,15 @@ class ModuleOptimizer:
 
         if not self._preliminary_check(module_pool, prioritized_attrs): return []
         candidate_modules = self.prefilter_modules(module_pool, prioritized_attrs)
-        if len(candidate_modules) < 4:
-            self.logger.warning("Less than 4 modules after pre-filtering, unable to form valid combinations.")
+        if len(candidate_modules) < MODULE_COMBINATION_SIZE:
+            self.logger.warning(f"Less than {MODULE_COMBINATION_SIZE} modules after pre-filtering, unable to form valid combinations.")
             return []
 
         high_quality_modules = [m for m in candidate_modules if sum(p.value for p in m.parts) >= self.quality_threshold]
         low_quality_modules = [m for m in candidate_modules if sum(p.value for p in m.parts) < self.quality_threshold]
         self.logger.info(f"Module pooling completed: {len(high_quality_modules)} high-quality modules, {len(low_quality_modules)} low-quality modules.")
-        if len(high_quality_modules) < 4:
-            self.logger.warning("Less than 4 high-quality modules, using all candidate modules for optimization.")
+        if len(high_quality_modules) < MODULE_COMBINATION_SIZE:
+            self.logger.warning(f"Less than {MODULE_COMBINATION_SIZE} high-quality modules, using all candidate modules for optimization.")
             high_quality_modules = candidate_modules
             low_quality_modules = []
 
@@ -466,15 +483,18 @@ class ModuleOptimizer:
         return deduplicated_solutions[:top_n]
     
     def _local_search_improvement(self, solution: ModuleSolution, module_pool: List[ModuleInfo], category: ModuleCategory, prioritized_attrs: Optional[List[str]]) -> ModuleSolution:
+        fitness_cache: Dict[Tuple[int, ...], float] = {} if ENABLE_FITNESS_CACHE else {}
         best_solution = deepcopy(solution)
-        best_solution.optimization_score = calculate_fitness(best_solution.modules, category, prioritized_attrs)
+        best_solution.optimization_score = calculate_fitness(best_solution.modules, category, prioritized_attrs,
+                                                           cache=fitness_cache if ENABLE_FITNESS_CACHE else None)
         while True:
             improved = False
             for i in range(len(best_solution.modules)):
                 for new_module in module_pool:
                     if new_module.uuid in {m.uuid for m in best_solution.modules}: continue
                     temp_modules = best_solution.modules[:i] + [new_module] + best_solution.modules[i+1:]
-                    new_score = calculate_fitness(temp_modules, category, prioritized_attrs)
+                    new_score = calculate_fitness(temp_modules, category, prioritized_attrs,
+                                                  cache=fitness_cache if ENABLE_FITNESS_CACHE else None)
                     if new_score > best_solution.optimization_score:
                         best_solution.modules = temp_modules
                         best_solution.optimization_score = new_score
