@@ -2,7 +2,8 @@
 [![Español](https://img.shields.io/badge/Español%20🇪🇸-C60B1E?style=for-the-badge)](#spanish-version)
 
 <a id="english-version"></a>
-# ✨ BPSR Auto Modules — Module Optimizer
+
+# ✨ BPSR Auto Modules — Module Optimizer Season 3 Update
 
 ![Application Screenshot](https://github.com/mrsnakke/gachaIMG/blob/main/moduss3.png?raw=true)
 
