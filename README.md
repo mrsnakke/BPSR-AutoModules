@@ -25,65 +25,69 @@
 
 # 🇬🇧 English Version
 
-An intelligent, high-performance module optimization tool with a modern PyQt6 graphical user interface for the game **"Blue Protocol Star Resonance" (BPSR)**.
+A high-performance module optimization tool with a modern graphical user interface for **"Blue Protocol Star Resonance" (BPSR)**.
 
 ## 🌟 Key Features
 
-*   **Modern PyQt6 GUI:** A beautiful dark-themed interface built for a seamless user experience. Includes tabs for:
-    *   **Optimizer:** Configuration and high-speed calculation.
-    *   **Inventory:** Visualizing all captured modules with beautiful cards.
-    *   **Settings:** Paths, interface, and language customization.
-*   **Automated Network Packet Sniffing:** No manual input needed! Simply change channels, teleport, or relogin in the game, and the program automatically captures and imports your module inventory.
-*   **Dynamic File Watching:** Automatically monitors `modules.vdata`. Any updates from network capture or file changes are loaded instantly without restarting.
-*   **Ultra-Fast C++ Core Optimizer:** Employs parallel strategy enumeration + beam search compiled in C++ (via pybind11). Capable of calculating trillions of combinations in seconds.
-*   **Hardware Acceleration:** Automatic GPU acceleration (CUDA for NVIDIA, OpenCL for AMD/Intel) with seamless fallback to CPU.
-*   **Bilingual Support:** Fully localized in English, Spanish, and Chinese.
+*   **Modern GUI Includes:**
+    *   **Optimizer:** High-speed configuration and calculation.
+    *   **Inventory:** Visual representation of modules through detailed cards.
+    *   **Settings:** Network management, interface, and language options.
+*   **Automated Network Sniffing:** No manual input needed! Just change channels, teleport, or relogin to automatically import your inventory.
+*   **Dynamic Monitoring:** Real-time tracking of the `modules.vdata` file. Changes are loaded instantly without restarting the application.
+*   **High-Performance C++ Core:** Built with `pybind11`, utilizing beam search and parallel enumeration to calculate trillions of combinations in seconds.
+*   **Hardware Acceleration:** Native support for CUDA (NVIDIA) and OpenCL (AMD/Intel) with automatic fallback to CPU.
+*   **Multilingual:** Fully translated into English, Spanish, and Chinese.
 
 ## 📦 Installation & Usage (Recommended)
 
-1.  **Download the executable:** Get the latest precompiled `BPSR_Module_Optimizer.exe` from the [Releases](#) section.
-2.  **Install Npcap:** Download and install [Npcap](https://npcap.com/). This is **required** for live network packet capturing.
-3.  **Run the App:** Place the executable in any folder and run it. No Python installation required!
-4.  **Capture Modules:** 
-    *   While the game is open, **teleport, switch channel, or relogin**.
+1.  **Download the executable:** Get `BPSR_Module_Optimizer.exe` from the [Releases](#) section.
+2.  **Install Npcap:** Download and install [Npcap](https://npcap.com/). This is **mandatory** for real-time data capture.
+3.  **Run the App:** Save the file in any folder and open it.
+4.  **Capture your Modules:**
+    *   Launch the app and add stats by priority. It is recommended to add all possible stats for your build (e.g., 6 stats) for better results.
+    *   Choose the Optimization Method: **Standard** is for Combat Power (CP), while **Level 5/6 Priority** is recommended for finding the best possible results.
+    *   Click on **Calculate 5-module set**.
+    *   In-game, **teleport or switch channels**.
     *   The app will automatically save your modules to `modules.vdata`.
     *   Status: `🟢 Inventory Loaded (X modules)`.
-5.  **Optimize:** Choose your attributes in the **Optimizer** tab and click **Calculate**.
+5.  **Optimize:** Select your priorities in the **Optimizer** tab and click **Calculate**.
+	*   ⚠️ If your inventory is already loaded (`🟢 Inventory Loaded`), you can use the **"Use existing data"** option to recalculate without having to capture the data again.
 
-## 💻 Advanced Installation (From Source)
+## 💻 Advanced Installation (Source Code)
 
 ### Requirements
 *   Python 3.10+
 *   Visual Studio Build Tools 2019/2022 (C++ Desktop Development)
 *   Windows SDK
-*   *(Optional)* CUDA Toolkit 12.8 for NVIDIA GPU acceleration.
+*   *(Optional)* CUDA Toolkit 12.8 for NVIDIA support.
 
 ### Steps
 ```bash
-# 1. Clone the repository
+# 1. Clone repository
 git clone https://github.com/fudiyangjin/StarResonanceAutoMod.git
 cd StarResonanceAutoMod
 
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Build C++ core extension
+# 3. Build C++ extension
 cd cpp_extension
 python setup.py build_ext --inplace
 cd ..
 
-# 4. Run application
+# 4. Run
 python gui/main_window.py
 ```
 
 ## ⚠️ Known Issues
-*   The UI may appear unresponsive for a few seconds during extremely intensive calculations. We are working on offloading these tasks to improve fluidity.
+*   The UI may briefly become unresponsive during massive optimization calculations due to high CPU load. We are working on improving asynchronous processing.
 
 ## ❤️ Credits & Disclaimer
 *   **Fork based on:** [StarResonanceAutoMod](https://github.com/fudiyangjin/StarResonanceAutoMod) by fudiyangjin.
-*   **Inspiration:** [StarResonanceDamageCounter](https://github.com/dmlgzs/StarResonanceDamageCounter) by dmlgzs.
+*   **Special thanks to:** [StarResonanceDamageCounter](https://github.com/dmlgzs/StarResonanceDamageCounter) by dmlgzs.
 
-**Disclaimer:** This tool is for learning and data analysis only. Use at your own risk. The author is not responsible for any misuse or violations of the game's terms of service.
+**Disclaimer:** This tool is for educational and data analysis purposes only. The user assumes all risks. The author is not responsible for any violations of the game's terms of service.
 
 ---
 
@@ -91,14 +95,14 @@ python gui/main_window.py
 
 # 🇪🇸 Versión en Español
 
-Una herramienta inteligente de optimización de módulos de alto rendimiento con interfaz gráfica moderna en PyQt6 para el juego **"Blue Protocol Star Resonance" (BPSR)**.
+Una herramienta de optimización de módulos con interfaz gráfica para **"Blue Protocol Star Resonance" (BPSR)**.
 
 ## 🌟 Características Clave
 
-*   **Interfaz Gráfica Moderna (PyQt6):** Tema oscuro diseñado para una experiencia fluida. Incluye:
+*   **La Interfaz Incluye:**
     *   **Optimizador:** Configuración y cálculo de alta velocidad.
     *   **Inventario:** Visualización gráfica de módulos mediante tarjetas detalladas.
-    *   **Ajustes:** Gestión de rutas, interfaz e idioma.
+    *   **Ajustes:** Gestión de Red, interfaz e idioma.
 *   **Captura Automática de Red:** ¡Sin entrada manual! Cambia de canal, teletranspórtate o reinicia sesión para importar automáticamente tu inventario.
 *   **Detección Dinámica:** Monitorea el archivo `modules.vdata` en tiempo real. Los cambios se cargan instantáneamente sin reiniciar la app.
 *   **Núcleo C++ de Alto Rendimiento:** Implementado con `pybind11`, utiliza búsqueda de haz (beam search) y enumeración paralela para calcular billones de opciones en segundos.
@@ -109,12 +113,16 @@ Una herramienta inteligente de optimización de módulos de alto rendimiento con
 
 1.  **Descarga el ejecutable:** Consigue `BPSR_Module_Optimizer.exe` en la sección de [Releases](#).
 2.  **Instala Npcap:** Descarga e instala [Npcap](https://npcap.com/). Es **indispensable** para la captura de datos en tiempo real.
-3.  **Ejecuta la App:** Guarda el archivo en cualquier carpeta y ábrelo. ¡No requiere Python!
+3.  **Ejecuta la App:** Guarda el archivo en cualquier carpeta y ábrelo.
 4.  **Captura tus Módulos:**
+    *   Ejecutar la app y añadir los stats por prioridad. Se recomienda poner todos los que pueda llevar tu build (por ejemplo 6 stats) para mejores resultados.
+    *   Elegir el Método de Optimización: **Estándar** es para buscar Poder de Combate (CP) y el de **Prioridad de Nivel 5/6** es el recomendado para encontrar mejores resultados.
+    *   Presionar **Calcular conjunto de 5 módulos**.
     *   Dentro del juego, **cambia de canal o teletranspórtate**.
     *   La app guardará los módulos automáticamente en `modules.vdata`.
     *   Estado: `🟢 Inventario Cargado (X módulos)`.
 5.  **Optimiza:** Selecciona tus prioridades en la pestaña **Optimizador** y pulsa **Calcular**.
+	*   ⚠️ Si ya cargaste tu inventario (`🟢 Inventario Cargado`) cuando pulses a **Calcular** puedes usar la opción de **"Usar datos existentes"** para recalcular sin tener que capturar de nuevo los datos.
 
 ## 💻 Instalación Avanzada (Código Fuente)
 
