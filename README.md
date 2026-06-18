@@ -47,7 +47,7 @@ A high-performance module optimization tool with a modern graphical user interfa
 3.  **Run the App:** Save the file in any folder and open it.
 4.  **Capture your Modules:**
     *   Launch the app and add stats by priority. It is recommended to add all possible stats for your build (e.g., 6 stats) for better results.
-    *   Choose the Optimization Method: **Standard** is for Combat Power (CP), while **Level 5/6 Priority** is recommended for finding the best possible results.
+    *   Choose the Optimization Method: **Standard** is for Ability Score, while **Level 5/6 Priority** is recommended for finding the best possible results.
     *   Click on **Calculate 5-module set**.
     *   In-game, **teleport or switch channels**.
     *   The app will automatically save your modules to `modules.vdata`.
@@ -118,7 +118,7 @@ Una herramienta de optimización de módulos con interfaz gráfica para **"Blue 
 3.  **Ejecuta la App:** Guarda el archivo en cualquier carpeta y ábrelo.
 4.  **Captura tus Módulos:**
     *   Ejecutar la app y añadir los stats por prioridad. Se recomienda poner todos los que pueda llevar tu build (por ejemplo 6 stats) para mejores resultados.
-    *   Elegir el Método de Optimización: **Estándar** es para buscar Poder de Combate (CP) y el de **Prioridad de Nivel 5/6** es el recomendado para encontrar mejores resultados.
+    *   Elegir el Método de Optimización: **Estándar** es para buscar Puntaje de Capacidad y el de **Prioridad de Nivel 5/6** es el recomendado para encontrar mejores resultados.
     *   Presionar **Calcular conjunto de 5 módulos**.
     *   Dentro del juego, **cambia de canal o teletranspórtate**.
     *   La app guardará los módulos automáticamente en `modules.vdata`.
