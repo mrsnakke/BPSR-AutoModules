@@ -258,6 +258,10 @@ def to_spanish_module(config_id: int, fallback_cn: str) -> str:
 # 属性阈值和效果等级
 ATTR_THRESHOLDS = [1, 4, 8, 12, 16, 20]
 
+# Naming Note / Nota de traducción para el futuro:
+# El concepto denominado como "Poder de Combate" / "Combat Power":
+# En inglés: Ability Score
+# En español: Puntaje de Capacidad
 # 基础词条战力映射
 BASIC_ATTR_POWER_MAP = {
     1: 7,

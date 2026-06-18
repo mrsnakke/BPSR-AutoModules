@@ -599,9 +599,9 @@ class ModuleOptimizerGUI(QMainWindow):
         config_layout.addWidget(self.method_lbl)
         self.method_select = QComboBox()
         if self.lang == "en":
-            self.method_select.addItems(["Standard Combat Power", "Level 5/6 Priority (Max Lv6/Lv5)"])
+            self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
         else:
-            self.method_select.addItems(["标准战力评分", "等阶5/6优先 (最大化Lv6/Lv5)"])
+            self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
         config_layout.addWidget(self.method_select)
 
         # Botón de Cálculo / Optimización (Anclado al fondo)
@@ -997,11 +997,11 @@ class ModuleOptimizerGUI(QMainWindow):
             self.method_select.blockSignals(True)
             self.method_select.clear()
             if self.lang == "en":
-                self.method_select.addItems(["Standard Combat Power", "Level 5/6 Priority (Max Lv6/Lv5)"])
+                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
             elif self.lang == "es":
-                self.method_select.addItems(["Poder de Combate Estándar", "Prioridad de Nivel 5/6 (Máx Lv6/Lv5)"])
+                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
             else:
-                self.method_select.addItems(["标准战力评分", "等阶5/6优先 (最大化Lv6/Lv5)"])
+                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
             self.method_select.setCurrentIndex(current_idx if current_idx >= 0 else 0)
             self.method_select.blockSignals(False)
 

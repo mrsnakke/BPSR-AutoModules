@@ -34,3 +34,4 @@ ENV/
 .idea/
 .vscode/
 cpp_extension/src/module_optimizer_cuda.obj
+modules.vdata
