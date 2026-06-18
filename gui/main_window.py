@@ -140,7 +140,10 @@ class LoadingOverlay(QFrame):
         
         # Icon label for Calcular.png
         self.icon_lbl = QLabel()
-        icon_path = os.path.join("gui", "images", "Calcular.png")
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            icon_path = os.path.join(sys._MEIPASS, "gui", "images", "Calcular.png")
+        else:
+            icon_path = os.path.join("gui", "images", "Calcular.png")
         if os.path.exists(icon_path):
             pixmap = QPixmap(icon_path)
             self.icon_lbl.setPixmap(pixmap.scaled(140, 140, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
@@ -191,7 +194,10 @@ class LoadingOverlay(QFrame):
         main_layout.addLayout(text_layout)
 
     def set_image(self, image_name: str):
-        icon_path = os.path.join("gui", "images", image_name)
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            icon_path = os.path.join(sys._MEIPASS, "gui", "images", image_name)
+        else:
+            icon_path = os.path.join("gui", "images", image_name)
         if os.path.exists(icon_path):
             pixmap = QPixmap(icon_path)
             self.icon_lbl.setPixmap(pixmap.scaled(140, 140, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
