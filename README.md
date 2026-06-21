@@ -24,7 +24,7 @@
 <a name="english-version"></a>
 
 # 🇬🇧 English Version
-<img width="1399" height="881" alt="image" src="https://github.com/user-attachments/assets/d681e08f-681e-4ae3-ae4b-cd9fb9a01d1c" />
+<img width="1399" height="881" alt="image" src="https://github.com/user-attachments/assets/9eece1bb-dc45-4620-9f5c-fe6841508726" />
 
 A high-performance module optimization tool with a modern graphical user interface for **"Blue Protocol Star Resonance" (BPSR)**.
 
@@ -95,7 +95,7 @@ python gui/main_window.py
 <a name="spanish-version"></a>
 
 # 🇪🇸 Versión en Español
-<img width="1399" height="881" alt="image" src="https://github.com/user-attachments/assets/b89dbe72-fc16-4948-89c5-9fddfb9e60f4" />
+<img width="1399" height="881" alt="image" src="https://github.com/user-attachments/assets/9eece1bb-dc45-4620-9f5c-fe6841508726" />
 
 Una herramienta de optimización de módulos con interfaz gráfica para **"Blue Protocol Star Resonance" (BPSR)**.
 

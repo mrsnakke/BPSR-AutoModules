@@ -361,7 +361,7 @@ class ModuleOptimizerGUI(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("BPSR Module Optimizer by MrSnake")
-        self.setGeometry(100, 100, 1400, 850)
+        self.setGeometry(100, 100, 1451, 880)
         
         # Set Window Icon
         win_icon_path = os.path.join(self.image_base_path, "icon.ico")
@@ -613,7 +613,8 @@ class ModuleOptimizerGUI(QMainWindow):
         self.calc_btn.clicked.connect(self.run_optimization)
         config_layout.addWidget(self.calc_btn)
 
-        parent_layout.addWidget(config_container, 32) # Proporción de ancho izquierda
+        config_container.setFixedWidth(290) # Ancho fijo de 290px
+        parent_layout.addWidget(config_container)
 
     def setup_results_panel(self, parent_layout):
         results_container = QFrame()
@@ -622,9 +623,7 @@ class ModuleOptimizerGUI(QMainWindow):
         results_container.setStyleSheet(f"""
             QFrame#ResultsContainer {{
                 border: 1px solid #2d2d2d;
-                background-image: url('{bg_path}');
-                background-position: center;
-                background-repeat: no-repeat;
+                border-image: url('{bg_path}') 0 0 0 0 stretch stretch;
             }}
         """)
         results_layout = QVBoxLayout(results_container)
@@ -642,7 +641,9 @@ class ModuleOptimizerGUI(QMainWindow):
         self.results_grid_widget.setStyleSheet("background-color: transparent;")
         self.results_grid = QGridLayout(self.results_grid_widget)
         self.results_grid.setContentsMargins(0, 0, 0, 0)
-        self.results_grid.setSpacing(20)
+        self.results_grid.setSpacing(10)
+        self.results_grid.setColumnStretch(0, 1) # Asegura que la primera columna se estire
+        self.results_grid.setColumnStretch(1, 1) # Asegura que la segunda columna se estire
         self.results_scroll.setWidget(self.results_grid_widget)
         
         results_layout.addWidget(self.results_scroll)
@@ -652,7 +653,7 @@ class ModuleOptimizerGUI(QMainWindow):
         self.loading_overlay.hide()
         self.loading_overlay.skip_clicked.connect(self.skip_packet_capture)
         
-        parent_layout.addWidget(results_container, 68) # Proporción de ancho derecha
+        parent_layout.addWidget(results_container)
 
     def setup_inventory_tab(self):
         layout = QVBoxLayout(self.inventory_tab)
@@ -665,9 +666,7 @@ class ModuleOptimizerGUI(QMainWindow):
         inventory_container.setStyleSheet(f"""
             QFrame#InventoryContainer {{
                 border: none;
-                background-image: url('{bg_path}');
-                background-position: center;
-                background-repeat: no-repeat;
+                border-image: url('{bg_path}') 0 0 0 0 stretch stretch;
             }}
         """)
         
@@ -1373,6 +1372,7 @@ class ModuleOptimizerGUI(QMainWindow):
 
         for i, sol in enumerate(solutions[:10]):
             card = self.create_solution_card(sol, i + 1)
+            # Se ajusta para 2 columnas, ajustando la fila automáticamente
             self.results_grid.addWidget(card, i // 2, i % 2)
 
     def create_solution_card(self, solution: ModuleSolution, rank: int) -> QWidget:
@@ -1414,25 +1414,29 @@ class ModuleOptimizerGUI(QMainWindow):
         mod_layout.setSpacing(6)
         for mod in solution.modules:
             mod_widget = QWidget()
-            mod_widget.setFixedSize(50, 50)
+            # Tamaño aumentado en un 50% (50 * 1.5 = 75)
+            mod_widget.setFixedSize(75, 75)
             
             # Contenedor apilado usando QLabel para renderizar el fondo de calidad y el icono de dispositivo
             stacked_layout = QVBoxLayout(mod_widget)
             stacked_layout.setContentsMargins(0, 0, 0, 0)
             
             bg_label = QLabel(mod_widget)
-            bg_label.setFixedSize(50, 50)
+            # Tamaño aumentado en un 50%
+            bg_label.setFixedSize(75, 75)
             
             # Determinar fondo según calidad (3: Excelente/Amarillo-Naranja, 2: Avanzado/Morado, etc.)
             q_icon = f"item_quality_{mod.quality}.png"
             bg_pixmap = QPixmap(os.path.join(self.image_base_path, q_icon))
             if bg_pixmap.isNull():
                 bg_pixmap = QPixmap(os.path.join(self.image_base_path, "item_quality_3.png"))
-            bg_label.setPixmap(bg_pixmap.scaled(50, 50, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+            # Tamaño aumentado en un 50%
+            bg_label.setPixmap(bg_pixmap.scaled(75, 75, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
 
             # Icono del dispositivo por encima del fondo
             fg_label = QLabel(bg_label)
-            fg_label.setFixedSize(50, 50)
+            # Tamaño aumentado en un 50%
+            fg_label.setFixedSize(75, 75)
             fg_label.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
             
             # Mapear el dispositivo según el config_id
@@ -1454,19 +1458,54 @@ class ModuleOptimizerGUI(QMainWindow):
                 
             fg_pixmap = QPixmap(device_icon_path)
             if not fg_pixmap.isNull():
-                fg_label.setPixmap(fg_pixmap.scaled(44, 44, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
-                fg_label.move(3, 3) # Centrarlo ligeramente en el contenedor de 50x50
+                # Tamaño aumentado en un 50% (44 * 1.5 = 66, 3 * 1.5 = 4.5)
+                fg_label.setPixmap(fg_pixmap.scaled(66, 66, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+                fg_label.move(4, 4) # Centrarlo ligeramente en el contenedor de 75x75
 
-            mod_layout.addWidget(mod_widget)
+            # Contenedor para el módulo individual con su imagen y stats compactos
+            single_mod_container_widget = QWidget()
+            # Ancho fijo para cada módulo (60 * 1.5 = 90)
+            single_mod_container_widget.setFixedWidth(90)
+            single_mod_container_layout = QVBoxLayout(single_mod_container_widget)
+            single_mod_container_layout.setContentsMargins(0, 0, 0, 0)
+            single_mod_container_layout.setSpacing(2) # Espaciado mínimo entre imagen y stats
+
+            single_mod_container_layout.addWidget(mod_widget) # La imagen del módulo 50x50
+
+            # Stats individuales del módulo
+            mod_stats_layout = QVBoxLayout()
+            mod_stats_layout.setContentsMargins(0, 0, 0, 0)
+            mod_stats_layout.setSpacing(1)
+
+            for part in mod.parts: # Los 3 stats principales del módulo
+                stat_row_mini = QHBoxLayout()
+                stat_row_mini.setSpacing(1)
+                stat_row_mini.setAlignment(Qt.AlignmentFlag.AlignCenter) # Centrar los stats
+
+                stat_id = part.id
+                stat_icon_p = self.get_stat_icon_path(stat_id)
+                icon_lbl_mini = QLabel()
+                # Tamaño aumentado en un 50% (12 * 1.5 = 18)
+                icon_lbl_mini.setPixmap(QPixmap(stat_icon_p).scaled(18, 18, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
+                stat_row_mini.addWidget(icon_lbl_mini)
+
+                # Solo valor del stat, sin nombre, para ahorrar espacio
+                stat_value_lbl_mini = QLabel(f"<font color='#fff'><b style='font-family: Consolas; font-size: 8pt;'>+{part.value}</b></font>")
+                stat_value_lbl_mini.setFont(QFont("Segoe UI Semibold", 8))
+                stat_row_mini.addWidget(stat_value_lbl_mini)
+                mod_stats_layout.addLayout(stat_row_mini)
+            
+            single_mod_container_layout.addLayout(mod_stats_layout)
+            mod_layout.addWidget(single_mod_container_widget)
             
         layout.addLayout(mod_layout)
 
-        # Desglose de Atributos
+        # Desglose de Atributos (ahora en QGridLayout de 3 columnas)
         attr_container = QWidget()
         attr_container.setStyleSheet("background-color: rgba(20, 20, 20, 0.5); border-radius: 6px; padding: 5px;")
-        attr_vbox = QVBoxLayout(attr_container)
-        attr_vbox.setContentsMargins(5, 5, 5, 5)
-        attr_vbox.setSpacing(3)
+        attr_grid_layout = QGridLayout(attr_container) # Cambiado a QGridLayout
+        attr_grid_layout.setContentsMargins(5, 5, 5, 5)
+        attr_grid_layout.setSpacing(3)
         
         if self.lang == 'en':
             attr_dist_title = "Attribute Distribution:"
@@ -1476,8 +1515,10 @@ class ModuleOptimizerGUI(QMainWindow):
             attr_dist_title = "属性分布:"
         attr_dist_lbl = QLabel(f"<font color='#888'>{attr_dist_title}</font>")
         attr_dist_lbl.setFont(QFont("Segoe UI Semibold", 9))
-        attr_vbox.addWidget(attr_dist_lbl)
+        attr_grid_layout.addWidget(attr_dist_lbl, 0, 0, 1, 3) # Título ocupando 3 columnas
 
+        row_idx = 1 # Empezar en la segunda fila después del título
+        col_idx = 0
         for name, val in sorted(solution.attr_breakdown.items(), key=lambda x: x[1], reverse=True):
             if self.lang == 'en':
                 disp_name = to_english_attr(name)
@@ -1486,7 +1527,6 @@ class ModuleOptimizerGUI(QMainWindow):
             else:
                 disp_name = name
             
-            # Obtener el ID del stat para buscar su icono correspondiente
             stat_id = MODULE_ATTR_IDS.get(name, 1408)
             stat_icon_p = self.get_stat_icon_path(stat_id)
             
@@ -1502,7 +1542,15 @@ class ModuleOptimizerGUI(QMainWindow):
             stat_row.addWidget(stat_lbl)
             stat_row.addStretch(1)
             
-            attr_vbox.addLayout(stat_row)
+            # Crear un QWidget para contener el QHBoxLayout y añadirlo al QGridLayout
+            stat_widget = QWidget()
+            stat_widget.setLayout(stat_row)
+            attr_grid_layout.addWidget(stat_widget, row_idx, col_idx)
+            
+            col_idx += 1
+            if col_idx == 3: # 3 columnas por fila
+                col_idx = 0
+                row_idx += 1
             
         layout.addWidget(attr_container)
 
@@ -1594,13 +1642,38 @@ class ModuleOptimizerGUI(QMainWindow):
             h = self.results_scroll.height()
             
             # Central horizontal stripe across the results panel
+            # Ajustado para que el overlay de carga se ajuste al nuevo layout de 2 columnas
             stripe_h = 160
             stripe_y = self.results_scroll.y() + (h - stripe_h) // 2
+            # Ajustar el ancho para que sea un poco menos que el ancho total para dar espacio a los margenes
+            overlay_w = w - 20 
+            overlay_x = self.results_scroll.x() + 10 # Centrar horizontalmente
             
             self.loading_overlay.setGeometry(
-                self.results_scroll.x(),
+                overlay_x,
                 stripe_y,
-                w,
+                overlay_w,
+                stripe_h
+            )
+            
+            # Ajustar la superposición de carga para el nuevo diseño de 2 columnas
+            # Calcular el ancho total del área de resultados
+            total_results_width = self.results_scroll.width()
+            # Calcular el ancho de una sola tarjeta (aproximadamente la mitad del ancho total, menos el espaciado)
+            card_width_estimate = (total_results_width - self.results_grid.spacing()) // 2
+            
+            # El overlay se centrará en el área de resultados, pero su ancho se ajustará para no desbordar
+            # Considerar un ancho máximo para que no parezca desproporcionado si el panel es muy ancho
+            overlay_max_width = 600 # Un valor razonable para el ancho máximo del overlay
+            overlay_width = min(total_results_width - 40, overlay_max_width) # 40 para márgenes a cada lado
+            
+            # Calcular la posición X para centrar el overlay en el área de resultados
+            overlay_x = self.results_scroll.x() + (total_results_width - overlay_width) // 2
+            
+            self.loading_overlay.setGeometry(
+                overlay_x,
+                stripe_y,
+                overlay_width,
                 stripe_h
             )
 
