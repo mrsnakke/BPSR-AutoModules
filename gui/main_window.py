@@ -599,9 +599,12 @@ class ModuleOptimizerGUI(QMainWindow):
         config_layout.addWidget(self.method_lbl)
         self.method_select = QComboBox()
         if self.lang == "en":
-            self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
+            self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5", "Auto"])
+        elif self.lang == "es":
+            self.method_select.addItems(["Estándar", "Prioridad Lv.6/Lv.5", "Auto"])
         else:
-            self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
+            self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5", "Auto"])
+        self.method_select.setCurrentIndex(2) # Seleccionar "Auto" por defecto
         config_layout.addWidget(self.method_select)
 
         # Botón de Cálculo / Optimización (Anclado al fondo)
@@ -997,11 +1000,54 @@ class ModuleOptimizerGUI(QMainWindow):
             self.method_select.blockSignals(True)
             self.method_select.clear()
             if self.lang == "en":
-                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
+                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5", "Auto"])
             elif self.lang == "es":
-                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
+                self.method_select.addItems(["Estándar", "Prioridad Lv.6/Lv.5", "Auto"])
             else:
-                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5"])
+                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5", "Auto"])
+            self.method_select.setCurrentIndex(current_idx if current_idx >= 0 else 0)
+            self.method_select.blockSignals(False)
+
+        if hasattr(self, 'method_select'):
+            if self.lang == "en":
+                self.method_lbl.setText("<b>Optimization Method</b>")
+            elif self.lang == "es":
+                self.method_lbl.setText("<b>Método de Optimización</b>")
+            else:
+                self.method_lbl.setText("<b>优化方法</b>")
+
+        # Update quality checkbox text
+        if self.lang == "en":
+            self.qual_checks["Basic"].setText("Basic")
+            self.qual_checks["Advanced"].setText("Advanced")
+            self.qual_checks["Excellent"].setText("Excellent")
+        elif self.lang == "es":
+            self.qual_checks["Basic"].setText("Básico")
+            self.qual_checks["Advanced"].setText("Avanzado")
+            self.qual_checks["Excellent"].setText("Excelente")
+        else:
+            self.qual_checks["Basic"].setText("普通")
+            self.qual_checks["Advanced"].setText("高级")
+            self.qual_checks["Excellent"].setText("卓越")
+        
+        # Update optimization method texts
+        if hasattr(self, 'method_lbl') and self.method_lbl is not None:
+            if self.lang == "en":
+                self.method_lbl.setText("<b>Optimization Method</b>")
+            elif self.lang == "es":
+                self.method_lbl.setText("<b>Método de Optimización</b>")
+            else:
+                self.method_lbl.setText("<b>优化方法</b>")
+        if hasattr(self, 'method_select') and self.method_select is not None:
+            current_idx = self.method_select.currentIndex()
+            self.method_select.blockSignals(True)
+            self.method_select.clear()
+            if self.lang == "en":
+                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5", "Auto"])
+            elif self.lang == "es":
+                self.method_select.addItems(["Estándar", "Prioridad Lv.6/Lv.5", "Auto"])
+            else:
+                self.method_select.addItems(["Standard", "Priority Lv.6/Lv.5", "Auto"])
             self.method_select.setCurrentIndex(current_idx if current_idx >= 0 else 0)
             self.method_select.blockSignals(False)
 
@@ -1286,6 +1332,8 @@ class ModuleOptimizerGUI(QMainWindow):
         if hasattr(self, 'method_select'):
             if self.method_select.currentIndex() == 1:
                 opt_mode = 'level_priority'
+            elif self.method_select.currentIndex() == 2:
+                opt_mode = 'auto'
 
         self.optimizer = ModuleOptimizer(
             target_attributes=target_attrs,

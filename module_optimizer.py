@@ -320,6 +320,15 @@ class ModuleOptimizer:
                 scored_solutions.append(sol)
             scored_solutions.sort(key=lambda x: x.score, reverse=True)
             unique_solutions = scored_solutions
+        elif self.optimization_mode == 'auto' and self.target_attributes:
+            scored_solutions = []
+            for sol in unique_solutions:
+                score, info = self._calculate_auto_score(sol)
+                sol.score = score
+                sol.custom_info = info
+                scored_solutions.append(sol)
+            scored_solutions.sort(key=lambda x: x.score, reverse=True)
+            unique_solutions = scored_solutions
         else:
             unique_solutions.sort(key=lambda x: x.score, reverse=True)
             
@@ -663,6 +672,75 @@ class ModuleOptimizer:
         else:
             info = f"Lv6: {levels_count[6]} | Lv5: {levels_count[5]} | 战力: {original_score:.0f}"
             
+        return score, info
+
+    def _calculate_auto_score(self, solution: ModuleSolution) -> Tuple[float, str]:
+        """计算自定义的等阶优先评分 (modo Auto)"""
+        levels_count = {6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+        priority_levels_count = {6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0}
+
+        attr_breakdown = {}
+        for module in solution.modules:
+            for part in module.parts:
+                attr_breakdown[part.name] = attr_breakdown.get(part.name, 0) + part.value
+
+        original_score = self._calculate_original_score(attr_breakdown)
+
+        for attr_name, val in attr_breakdown.items():
+            level = 0
+            for i, threshold in enumerate(ATTR_THRESHOLDS):
+                if val >= threshold:
+                    level = i + 1
+                else:
+                    break
+            if level > 0:
+                levels_count[level] += 1
+                if attr_name in self.target_attributes: # Si es un stat priority
+                    priority_levels_count[level] += 1
+
+        # Lógica de puntuación para el modo Auto
+        # La idea es compleja, y este es un intento inicial basado en la descripción.
+        # Requerirá ajustes finos y posiblemente más parámetros de configuración del usuario.
+        
+        score = 0.0
+        info_parts = []
+
+        # Requisitos de stats priority
+        min_priority_lv6_count = 2 # mínimo 2 Lv.6 de stats priority
+        min_priority_lv_any_count = 3 # al menos 3 stats priority en cualquier nivel > 0
+
+        if priority_levels_count[6] >= min_priority_lv6_count: # 2 Lv.6 de stats priority
+            score += 10000000.0
+            info_parts.append(f"P-Lv6>={min_priority_lv6_count}: {priority_levels_count[6]}")
+        
+        total_priority_levels = sum(priority_levels_count.values())
+        if total_priority_levels >= min_priority_lv_any_count: # al menos 3 stats priority en cualquier nivel
+            score += 1000000.0
+            info_parts.append(f"P-Total>={min_priority_lv_any_count}: {total_priority_levels}")
+
+        # Requisitos de Lv.6 totales (priorizados + no priorizados)
+        min_total_lv6_count = 4 # mínimo 4 Lv.6 totales
+        if levels_count[6] >= min_total_lv6_count:
+            score += 100000.0
+            info_parts.append(f"Total-Lv6>={min_total_lv6_count}: {levels_count[6]}")
+
+        # Bonificación por la combinación ideal (6 Lv.6 + 1 Lv.2)
+        if levels_count[6] >= 6 and levels_count[2] >= 1:
+            score += 50000000.0 # Gran bonificación por la combinación perfecta
+            info_parts.append("Perfect Combo: 6Lv6+1Lv2")
+        
+        # Añadir puntuación basada en la cantidad de Lv.6 y Lv.5, y luego la puntuación original
+        score += levels_count[6] * 10000.0
+        score += levels_count[5] * 100.0
+        score += (original_score / 1000.0) # La puntuación original tiene menos peso
+
+        info = " | ".join(info_parts) + (f" | Power: {original_score:.0f}" if self.lang == "en" else f" | 战力: {original_score:.0f}")
+        if not info_parts: # Si no cumple ningún criterio, al menos mostrar el poder original
+            if self.lang == "en":
+                info = f"Power: {original_score:.0f}"
+            else:
+                info = f"战力: {original_score:.0f}"
+
         return score, info
 
     def _restore_original_scores(self, solutions: List[ModuleSolution]) -> List[ModuleSolution]:
