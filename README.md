@@ -24,7 +24,7 @@
 <a name="english-version"></a>
 
 # 🇬🇧 English Version
-<img width="1399" height="881" alt="image" src="https://github.com/user-attachments/assets/9eece1bb-dc45-4620-9f5c-fe6841508726" />
+<img width="1399" height="881" alt="image" src="https://github.com/mrsnakke/gachaIMG/blob/main/newss.png?raw=true" />
 
 A high-performance module optimization tool with a modern graphical user interface for **"Blue Protocol Star Resonance" (BPSR)**.
 
@@ -95,7 +95,7 @@ python gui/main_window.py
 <a name="spanish-version"></a>
 
 # 🇪🇸 Versión en Español
-<img width="1399" height="881" alt="image" src="https://github.com/user-attachments/assets/9eece1bb-dc45-4620-9f5c-fe6841508726" />
+<img width="1399" height="881" alt="image" src="https://github.com/mrsnakke/gachaIMG/blob/main/newss.png?raw=true" />
 
 Una herramienta de optimización de módulos con interfaz gráfica para **"Blue Protocol Star Resonance" (BPSR)**.
 
