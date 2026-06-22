@@ -31,8 +31,8 @@ from network_interface_util import get_network_interfaces
 class StartupInstructionsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Instructions / Instrucciones / 使用说明")
-        self.setFixedSize(560, 480)
+        self.setWindowTitle("Optimization Modes / Modos de Optimización / 优化模式")
+        self.setFixedSize(580, 520)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Dialog)
         
         self.setStyleSheet("""
@@ -67,14 +67,14 @@ class StartupInstructionsDialog(QDialog):
         layout.setSpacing(15)
         
         # Header/Title
-        title_lbl = QLabel("BPSR Module Optimizer Instructions")
+        title_lbl = QLabel("BPSR Module Optimizer")
         title_lbl.setFont(QFont("Segoe UI", 16, QFont.Weight.Bold))
         title_lbl.setStyleSheet("color: #007acc;")
         title_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title_lbl)
         
         # Subtitle
-        sub_lbl = QLabel("How to load modules / Cómo cargar módulos / 如何加载模组")
+        sub_lbl = QLabel("Optimization Modes / Modos de Optimización / 优化模式")
         sub_lbl.setFont(QFont("Segoe UI", 10, QFont.Weight.DemiBold))
         sub_lbl.setStyleSheet("color: #888;")
         sub_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -83,14 +83,26 @@ class StartupInstructionsDialog(QDialog):
         # Central instruction area
         instructions_text = """
 <div style="line-height: 1.4;">
-    <p style="color: #4fc3f7; font-weight: bold; font-size: 13px; margin-bottom: 2px;">🇬🇧 English</p>
-    <p style="margin-top: 0; margin-bottom: 12px; font-size: 12px; color: #ddd;">Please <b>change channels (teleport / switch channel)</b> or <b>relogin</b> within the game to automatically capture and load your module inventory.</p>
-
     <p style="color: #4fc3f7; font-weight: bold; font-size: 13px; margin-bottom: 2px;">🇪🇸 Español</p>
-    <p style="margin-top: 0; margin-bottom: 12px; font-size: 12px; color: #ddd;">Por favor, <b>cambia de canal (teletransporte o cambio de canal)</b> o <b>vuelve a iniciar sesión</b> dentro del juego para capturar y cargar automáticamente tu inventario de módulos.</p>
+    <p style="margin-top: 0; margin-bottom: 12px; font-size: 11px; color: #ddd;">
+        • <b>Standard (Estándar)</b>: Valora estadísticas de nivel alto (Lv.5/Lv.6), pero busca una distribución general más equilibrada y balanceada en todo tu equipamiento.<br>
+        • <b>Priority Lv.6/Lv.5</b>: Enfoque estricto para maximizar y obtener los niveles más altos posibles (Lv.5 o Lv.6) exclusivamente en las estadísticas que has filtrado.<br>
+        • <b>Auto (Recomendado)</b>: Algoritmo inteligente que busca la combinación óptima para conseguir la mayor cantidad posible de estadísticas en Lv.6, priorizando tus filtros y buscando combos ideales (ej. 6 Lv.6 + 1 Lv.2).
+    </p>
+
+    <p style="color: #4fc3f7; font-weight: bold; font-size: 13px; margin-bottom: 2px;">🇬🇧 English</p>
+    <p style="margin-top: 0; margin-bottom: 12px; font-size: 11px; color: #ddd;">
+        • <b>Standard</b>: Values high-level stats (Lv.5/Lv.6) but aims for a more balanced and well-rounded general distribution across all your gear.<br>
+        • <b>Priority Lv.6/Lv.5</b>: Strict mode focused purely on achieving the highest possible levels (Lv.5 or Lv.6) specifically on your filtered stats.<br>
+        • <b>Auto (Recommended)</b>: Intelligent algorithm that searches for the ideal combination to maximize the number of Lv.6 stats, prioritizing your selected filters and seeking perfect combos (e.g., 6 Lv.6 + 1 Lv.2).
+    </p>
 
     <p style="color: #4fc3f7; font-weight: bold; font-size: 13px; margin-bottom: 2px;">🇨🇳 简体中文</p>
-    <p style="margin-top: 0; margin-bottom: 0; font-size: 12px; color: #ddd;">请在游戏内进行<b>切换频道（换线 / 传送）</b>或<b>重新登录</b>，以自动捕获并加载您的模组仓库。</p>
+    <p style="margin-top: 0; margin-bottom: 0; font-size: 11px; color: #ddd;">
+        • <b>Standard (标准)</b>: 评估高等级属性（Lv.5/Lv.6），但追求整体装备属性的平衡分配。<br>
+        • <b>Priority Lv.6/Lv.5 (高级优先)</b>: 严格模式，专注于在您筛选的的属性上获得尽可能高的等级（Lv.5或Lv.6）。<br>
+        • <b>Auto (智能推荐)</b>: 智能算法，在优先满足您筛选属性的同时，寻找最大化 Lv.6 属性数量的理想组合（例如 6 Lv.6 + 1 Lv.2）。
+    </p>
 </div>
         """
         

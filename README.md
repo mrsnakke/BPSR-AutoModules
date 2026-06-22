@@ -47,8 +47,11 @@ A high-performance module optimization tool with a modern graphical user interfa
 3.  **Run the App:** Save the file in any folder and open it.
 4.  **Capture your Modules:**
     *   Launch the app and add stats by priority. It is recommended to add all possible stats for your build (e.g., 6 stats) for better results.
-    *   Choose the Optimization Method: **Standard** is for Ability Score, while **Level 5/6 Priority** is recommended for finding the best possible results.
-    *   Click on **Calculate 5-module set**.
+    *   Choose the **Optimization Method** according to your goals:
+        *   **Standard**: Focuses on balanced and well-rounded combat score. Highly recommended for general gameplay and overall attribute value optimization.
+        *   **Priority Lv.6/Lv.5**: A strict mode focused purely on reaching the highest levels (Lv.5 or Lv.6) on your filtered stats, regardless of overall balance.
+        *   **Auto (Recommended)**: An intelligent multiclass algorithm that maximizes Lv.6 stats prioritising your filters, actively seeking ideal synergy combinations (e.g., granting massive bonuses for a perfect 6xLv.6 + 1xLv.2 combo).
+    *   Click on **Calculate 5-module combo sets**.
     *   In-game, **teleport or switch channels**.
     *   The app will automatically save your modules to `modules.vdata`.
     *   Status: `🟢 Inventory Loaded (X modules)`.
@@ -118,8 +121,11 @@ Una herramienta de optimización de módulos con interfaz gráfica para **"Blue 
 3.  **Ejecuta la App:** Guarda el archivo en cualquier carpeta y ábrelo.
 4.  **Captura tus Módulos:**
     *   Ejecutar la app y añadir los stats por prioridad. Se recomienda poner todos los que pueda llevar tu build (por ejemplo 6 stats) para mejores resultados.
-    *   Elegir el Método de Optimización: **Estándar** es para buscar Puntaje de Capacidad y el de **Prioridad de Nivel 5/6** es el recomendado para encontrar mejores resultados.
-    *   Presionar **Calcular conjunto de 5 módulos**.
+    *   Elige el **Método de Optimización** según tus objetivos:
+        *   **Estándar (Standard)**: Valora estadísticas de nivel alto, pero busca una distribución general equilibrada y balanceada basada en el poder de combate general.
+        *   **Prioridad Lv.6/Lv.5**: Enfoque estricto para maximizar y obtener niveles altos (Lv.5 o Lv.6) exclusivamente en tus estadísticas filtradas, sin importar el balance de otras estadísticas.
+        *   **Auto (Recomendado)**: Algoritmo inteligente multicapa que maximiza estadísticas en Lv.6 priorizando de forma inteligente tus filtros y buscando combinaciones ideales (como el combo perfecto de 6 Lv.6 + 1 Lv.2 para darte un bono masivo).
+    *   Presionar **Calcular conjuntos de 5 módulos**.
     *   Dentro del juego, **cambia de canal o teletranspórtate**.
     *   La app guardará los módulos automáticamente en `modules.vdata`.
     *   Estado: `🟢 Inventario Cargado (X módulos)`.
