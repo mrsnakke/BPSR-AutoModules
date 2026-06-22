@@ -69,8 +69,8 @@ A high-performance module optimization tool with a modern graphical user interfa
 ### Steps
 ```bash
 # 1. Clone repository
-git clone https://github.com/fudiyangjin/StarResonanceAutoMod.git
-cd StarResonanceAutoMod
+git clone https://github.com/mrsnakke/BPSR-AutoModules.git
+cd BPSR-AutoModules
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -82,6 +82,10 @@ cd ..
 
 # 4. Run
 python gui/main_window.py
+
+# 5. Build executable (.exe) (Requires PyInstaller)
+pip install pyinstaller
+python build.py
 ```
 
 ## ⚠️ Known Issues
@@ -143,8 +147,8 @@ Una herramienta de optimización de módulos con interfaz gráfica para **"Blue 
 ### Pasos
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/fudiyangjin/StarResonanceAutoMod.git
-cd StarResonanceAutoMod
+git clone https://github.com/mrsnakke/BPSR-AutoModules.git
+cd BPSR-AutoModules
 
 # 2. Instalar dependencias
 pip install -r requirements.txt
@@ -156,6 +160,10 @@ cd ..
 
 # 4. Ejecutar
 python gui/main_window.py
+
+# 5. Compilar ejecutable (.exe) (Requiere PyInstaller)
+pip install pyinstaller
+python build.py
 ```
 
 ## ⚠️ Problemas Conocidos
