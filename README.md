@@ -1,4 +1,4 @@
-# BPSR Module Optimizer
+# BPSR Module Optimizer Season 3
 
 <p align="center">
   <img src="icon.ico" width="120" height="120" alt="BPSR Module Optimizer Logo">
